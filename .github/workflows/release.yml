@@ -1,0 +1,35 @@
+name: Release
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+
+jobs:
+  publish:
+    if: |
+      github.event_name == 'pull_request' && github.event.pull_request.merged == true ||
+      github.event_name == 'workflow_run'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install a specific version
+        uses: eifinger/setup-rye@v3
+        with:
+          version: "latest"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install dependencies
+        run: rye sync
+
+      - name: Build project
+        run: rye build --clean
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}

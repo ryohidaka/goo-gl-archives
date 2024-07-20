@@ -1,0 +1,39 @@
+[project]
+name = "python-package-template"
+version = "0.1.0"
+description = "Minimum configuration template for publishing packages to PyPI."
+authors = [
+    { name = "ryohidaka", email = "39184410+ryohidaka@users.noreply.github.com" }
+]
+dependencies = []
+readme = "README.md"
+requires-python = ">= 3.8"
+license = {file = "LICENSE"}
+keywords = []
+
+[project.urls]
+Homepage = "https://github.com/ryohidaka/python-package-template"
+Repository = "https://github.com/ryohidaka/python-package-template"
+Issues = "https://github.com/ryohidaka/python-package-template/issues"
+Changelog = "https://github.com/ryohidaka/blob/main/python-package-template/CHANGELOG.md"
+
+[project.scripts]
+"python-package-template" = "python_package_template:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true
+dev-dependencies = [
+    "ruff>=0.4.4",
+    "pytest>=8.2.0",
+    "pre-commit>=3.7.1",
+]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/python_package_template"]
