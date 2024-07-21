@@ -1,6 +1,7 @@
 import concurrent.futures
 
 from tqdm import tqdm
+from sqlite2csv import SqliteToCSV
 
 from goo_gl_archives.utils.logger import setup_logger
 from goo_gl_archives.utils.requests import generate_random_strings, get_redirect_info
@@ -23,6 +24,7 @@ class GooGlArchives:
         self.count = count
         self.base_url = "https://goo.gl/"
         self.filename = "output.csv"
+        self.database = database
 
         # Init SQLAlchemy
         self.session = init_sqlalchemy(database)
@@ -61,3 +63,9 @@ class GooGlArchives:
 
         # Insert data to DB
         insert_data(self.session, results)
+
+        # Export to csv file
+        app = SqliteToCSV(
+            database=self.database, dest_dir=".output", table_names=["links"]
+        )
+        app.export()
