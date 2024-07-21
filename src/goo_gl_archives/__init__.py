@@ -1,3 +1,5 @@
+import concurrent.futures
+
 from goo_gl_archives.utils.logger import setup_logger
 from goo_gl_archives.utils.requests import generate_random_strings, get_redirect_info
 from goo_gl_archives.utils.sql import init_sqlalchemy, insert_data
@@ -35,27 +37,20 @@ class GooGlArchives:
 
         results = []
 
-        for uid in unique_strings:
-            full_url = self.base_url + uid
-            try:
-                # Retrieve redirect information for the URL
-                redirect_info = get_redirect_info(full_url)
-
-                if redirect_info is None:
-                    continue
-
-                results.append(
-                    {
-                        "uid": uid,
-                        "redirect_url": redirect_info["redirect_url"],
-                        "domain_name": redirect_info["domain_name"],
-                        "site_title": redirect_info["site_title"],
-                        "http_status": redirect_info["http_status"],
-                    }
-                )
-                logger.info(redirect_info)
-            except Exception as e:
-                logger.error(f"Failed to get info for {full_url}: {e}")
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            future_to_uid = {
+                executor.submit(get_redirect_info, self.base_url, uid): uid
+                for uid in unique_strings
+            }
+            for future in concurrent.futures.as_completed(future_to_uid):
+                uid = future_to_uid[future]
+                try:
+                    result = future.result()
+                    if result is not None:
+                        results.append(result)
+                        logger.info(result)
+                except Exception as e:
+                    logger.error(f"Exception occurred for {uid}: {e}")
 
         # Insert data to DB
         insert_data(self.session, results)

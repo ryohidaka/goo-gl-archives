@@ -1,9 +1,7 @@
 import random
+import requests
 import string
 
-import time
-
-import requests
 
 from bs4 import BeautifulSoup
 from typing import List, Optional, Dict, Any
@@ -41,16 +39,17 @@ def generate_random_strings(
     return random_strings
 
 
-def get_redirect_info(url: str) -> Optional[Dict[str, Any]]:
+def get_redirect_info(base_url: str, uid: str) -> Optional[Dict[str, Any]]:
     """
-    Retrieve the redirect URL, domain name, site title, and HTTP status code for a given URL.
+    Retrieve the redirect URL, domain name, site title, and HTTP status code for a given UID.
 
     Args:
-        url (str): The URL to fetch redirect information for.
+        uid (str): The UID to fetch redirect information for.
 
     Returns:
         Optional[Dict[str, Any]]: Dictionary containing redirect information if available, otherwise None.
     """
+    url = base_url + uid
     try:
         response = requests.get(url, allow_redirects=True)
         redirect_url = response.url
@@ -59,13 +58,11 @@ def get_redirect_info(url: str) -> Optional[Dict[str, Any]]:
         site_title = soup.title.string if soup.title else None
         http_status = response.status_code
 
-        # Delay to avoid overwhelming the server
-        time.sleep(0.3)
-
         if url == redirect_url:
             return None
 
         return {
+            "uid": uid,
             "redirect_url": redirect_url,
             "domain_name": domain_name,
             "site_title": site_title,
@@ -75,4 +72,4 @@ def get_redirect_info(url: str) -> Optional[Dict[str, Any]]:
         logger.error(f"Request failed for URL {url}: {e}")
     except Exception as e:
         logger.error(f"Error processing URL {url}: {e}")
-        return None
+    return None
