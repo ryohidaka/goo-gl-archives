@@ -38,3 +38,11 @@ jobs:
             git commit -m "chore: Update database on ${{ env.CURRENT_DATETIME }}"
             git push origin main
           fi
+
+      - name: Upload CSV to GIST
+        uses: exuanbo/actions-deploy-gist@v1
+        with:
+          token: ${{ secrets.GIST_TOKEN }}
+          gist_id: 928ec3b5bc795074e1f4ab4afc150ba3
+          file_path: .output/links.csv
+          file_type: text
