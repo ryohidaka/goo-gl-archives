@@ -11,8 +11,7 @@ class Link(Base):
 
     __tablename__ = "links"
 
-    id = Column(Integer, primary_key=True, autoincrement=True, unique=True)
-    uid = Column(String(10), unique=True, nullable=False)
+    uid = Column(String(10), primary_key=True, unique=True, nullable=False)
     redirect_url = Column(String)
     domain_name = Column(String)
     site_title = Column(String)
