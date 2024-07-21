@@ -8,6 +8,8 @@
 #   with-sources: false
 
 -e file:.
+beautifulsoup4==4.12.3
+    # via goo-gl-archives
 certifi==2024.7.4
     # via requests
 cfgv==3.4.0
@@ -39,6 +41,8 @@ pyyaml==6.0.1
 requests==2.32.3
     # via goo-gl-archives
 ruff==0.4.4
+soupsieve==2.5
+    # via beautifulsoup4
 urllib3==2.2.2
     # via requests
 virtualenv==20.26.1
