@@ -30,27 +30,42 @@ iniconfig==2.0.0
     # via pytest
 nodeenv==1.8.0
     # via pre-commit
+numpy==2.0.1
+    # via pandas
 packaging==24.0
     # via pytest
+pandas==2.2.2
+    # via sqlite2csv
 platformdirs==4.2.1
     # via virtualenv
 pluggy==1.5.0
     # via pytest
 pre-commit==3.7.1
 pytest==8.2.0
+python-dateutil==2.9.0.post0
+    # via pandas
+pytz==2024.1
+    # via pandas
 pyyaml==6.0.1
     # via pre-commit
 requests==2.32.3
     # via goo-gl-archives
 ruff==0.4.4
+six==1.16.0
+    # via python-dateutil
 soupsieve==2.5
     # via beautifulsoup4
 sqlalchemy==2.0.31
+    # via goo-gl-archives
+    # via sqlite2csv
+sqlite2csv==0.2.0
     # via goo-gl-archives
 tqdm==4.66.4
     # via goo-gl-archives
 typing-extensions==4.12.2
     # via sqlalchemy
+tzdata==2024.1
+    # via pandas
 urllib3==2.2.2
     # via requests
 virtualenv==20.26.1
