@@ -58,8 +58,8 @@ def get_redirect_info(base_url: str, uid: str) -> Optional[Dict[str, Any]]:
         site_title = soup.title.string if soup.title else None
         http_status = response.status_code
 
-        # If the domain name is goo.gl and the HTTP status is 400, there are no applicable links, so no processing is performed.
-        if domain_name == "goo.gl" and http_status == 400:
+        # If the domain name is goo.gl, there are no applicable links, so no processing is performed.
+        if domain_name == "goo.gl":
             return None
 
         return {
