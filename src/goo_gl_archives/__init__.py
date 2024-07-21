@@ -10,7 +10,7 @@ from goo_gl_archives.utils.sql import init_sqlalchemy, insert_data
 
 def main() -> int:
     print("Hello from goo-gl-archives!")
-    app = GooGlArchives(database="sqlite:///db/archives.db", count=10)
+    app = GooGlArchives(database="sqlite:///db/archives.db", count=1000)
     app.run()
 
     return 0
