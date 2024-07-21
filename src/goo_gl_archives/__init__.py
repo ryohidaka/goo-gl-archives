@@ -1,5 +1,7 @@
 import concurrent.futures
 
+from tqdm import tqdm
+
 from goo_gl_archives.utils.logger import setup_logger
 from goo_gl_archives.utils.requests import generate_random_strings, get_redirect_info
 from goo_gl_archives.utils.sql import init_sqlalchemy, insert_data
@@ -42,7 +44,12 @@ class GooGlArchives:
                 executor.submit(get_redirect_info, self.base_url, uid): uid
                 for uid in unique_strings
             }
-            for future in concurrent.futures.as_completed(future_to_uid):
+
+            for future in tqdm(
+                concurrent.futures.as_completed(future_to_uid),
+                total=self.count,
+                desc="Processing",
+            ):
                 uid = future_to_uid[future]
                 try:
                     result = future.result()
