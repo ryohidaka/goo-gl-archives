@@ -5,7 +5,9 @@ description = "Archives of links built with the Google URL Shortener."
 authors = [
     { name = "ryohidaka", email = "39184410+ryohidaka@users.noreply.github.com" }
 ]
-dependencies = []
+dependencies = [
+    "requests>=2.32.3",
+]
 readme = "README.md"
 requires-python = ">= 3.8"
 license = {file = "LICENSE"}

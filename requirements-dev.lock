@@ -8,14 +8,20 @@
 #   with-sources: false
 
 -e file:.
+certifi==2024.7.4
+    # via requests
 cfgv==3.4.0
     # via pre-commit
+charset-normalizer==3.3.2
+    # via requests
 distlib==0.3.8
     # via virtualenv
 filelock==3.14.0
     # via virtualenv
 identify==2.5.36
     # via pre-commit
+idna==3.7
+    # via requests
 iniconfig==2.0.0
     # via pytest
 nodeenv==1.8.0
@@ -30,7 +36,11 @@ pre-commit==3.7.1
 pytest==8.2.0
 pyyaml==6.0.1
     # via pre-commit
+requests==2.32.3
+    # via goo-gl-archives
 ruff==0.4.4
+urllib3==2.2.2
+    # via requests
 virtualenv==20.26.1
     # via pre-commit
 setuptools==69.5.1
