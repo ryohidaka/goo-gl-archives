@@ -1,7 +1,11 @@
 import random
 import string
 
+import time
 from typing import List
+
+import requests
+from sqlalchemy import Tuple
 
 
 def generate_random_strings(
@@ -29,3 +33,25 @@ def generate_random_strings(
         except Exception as e:
             print(f"Error generating random string: {e}")
     return random_strings
+
+
+def get_redirect_info(url: str) -> Tuple[str, str, str, int]:
+    """
+    Retrieve the redirect URL, domain name, and HTTP status code for a given URL.
+    """
+    try:
+        response = requests.get(url, allow_redirects=True)
+        redirect_url = response.url
+        domain_name = requests.utils.urlparse(redirect_url).netloc
+        http_status = response.status_code
+
+        # Delay to avoid overwhelming the server
+        time.sleep(0.3)
+
+        return url, redirect_url, domain_name, http_status
+    except requests.RequestException as e:
+        print(f"Request failed for URL {url}: {e}")
+        return url, "Failed", "Failed", "Failed", 0
+    except Exception as e:
+        print(f"Error processing URL {url}: {e}")
+        return url, "Failed", "Failed", "Failed", 0
