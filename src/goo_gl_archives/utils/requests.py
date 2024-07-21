@@ -51,10 +51,10 @@ def get_redirect_info(base_url: str, uid: str) -> Optional[Dict[str, Any]]:
     """
     url = base_url + uid
     try:
-        response = requests.get(url, allow_redirects=True)
+        response = requests.get(url, allow_redirects=True, timeout=3)
         redirect_url = response.url
         domain_name = requests.utils.urlparse(redirect_url).netloc
-        soup = BeautifulSoup(requests.get(redirect_url).text, "html.parser")
+        soup = BeautifulSoup(requests.get(redirect_url, timeout=3).text, "html.parser")
         site_title = soup.title.string if soup.title else None
         http_status = response.status_code
 
