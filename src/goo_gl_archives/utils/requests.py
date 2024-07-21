@@ -7,6 +7,8 @@ from typing import List
 import requests
 from sqlalchemy import Tuple
 
+from bs4 import BeautifulSoup
+
 
 def generate_random_strings(
     count: int, min_length: int = 5, max_length: int = 8
@@ -35,20 +37,22 @@ def generate_random_strings(
     return random_strings
 
 
-def get_redirect_info(url: str) -> Tuple[str, str, str, int]:
+def get_redirect_info(url: str) -> Tuple[str, str, str, str, int]:
     """
-    Retrieve the redirect URL, domain name, and HTTP status code for a given URL.
+    Retrieve the redirect URL, domain name, site title, and HTTP status code for a given URL.
     """
     try:
         response = requests.get(url, allow_redirects=True)
         redirect_url = response.url
         domain_name = requests.utils.urlparse(redirect_url).netloc
+        soup = BeautifulSoup(requests.get(redirect_url).text, "html.parser")
+        site_title = soup.title.string if soup.title else "No Title"
         http_status = response.status_code
 
         # Delay to avoid overwhelming the server
         time.sleep(0.3)
 
-        return url, redirect_url, domain_name, http_status
+        return url, redirect_url, domain_name, site_title, http_status
     except requests.RequestException as e:
         print(f"Request failed for URL {url}: {e}")
         return url, "Failed", "Failed", "Failed", 0
