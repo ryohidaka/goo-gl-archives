@@ -24,6 +24,8 @@ soupsieve==2.5
     # via beautifulsoup4
 sqlalchemy==2.0.31
     # via goo-gl-archives
+tqdm==4.66.4
+    # via goo-gl-archives
 typing-extensions==4.12.2
     # via sqlalchemy
 urllib3==2.2.2
