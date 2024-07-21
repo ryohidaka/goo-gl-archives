@@ -9,6 +9,11 @@ from sqlalchemy import Tuple
 
 from bs4 import BeautifulSoup
 
+from goo_gl_archives.utils.logger import setup_logger
+
+
+logger = setup_logger()
+
 
 def generate_random_strings(
     count: int, min_length: int = 5, max_length: int = 8
@@ -33,7 +38,7 @@ def generate_random_strings(
             )
             random_strings.append(random_string)
         except Exception as e:
-            print(f"Error generating random string: {e}")
+            logger.error(f"Error generating random string: {e}")
     return random_strings
 
 
@@ -54,8 +59,8 @@ def get_redirect_info(url: str) -> Tuple[str, str, str, str, int]:
 
         return url, redirect_url, domain_name, site_title, http_status
     except requests.RequestException as e:
-        print(f"Request failed for URL {url}: {e}")
+        logger.error(f"Request failed for URL {url}: {e}")
         return url, "Failed", "Failed", "Failed", 0
     except Exception as e:
-        print(f"Error processing URL {url}: {e}")
+        logger.error(f"Error processing URL {url}: {e}")
         return url, "Failed", "Failed", "Failed", 0

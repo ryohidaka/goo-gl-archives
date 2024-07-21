@@ -3,7 +3,9 @@ import csv
 from datetime import datetime
 from typing import List
 
+from goo_gl_archives.utils.logger import setup_logger
 
+logger = setup_logger()
 current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
@@ -30,6 +32,6 @@ def write_to_csv(data: List[List[str]], filename: str) -> None:
                 ]
             )
             writer.writerows(data)
-        print(f"Results written to {filename}")
+        logger.info(f"Results written to {filename}")
     except Exception as e:
-        print(f"Failed to write to CSV file {filename}: {e}")
+        logger.error(f"Failed to write to CSV file {filename}: {e}")
