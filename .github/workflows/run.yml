@@ -12,37 +12,40 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install a specific version
-        uses: eifinger/setup-rye@v3
+      - uses: actions/setup-go@v5
         with:
-          version: "latest"
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          enable-cache: true
+          go-version: "^1.21.3"
+          check-latest: true
+          cache-dependency-path: |
+            goo-gl-archives/go.sum
 
       - name: Run backup
-        run: |
-          rye sync
-          rye run goo-gl-archives
+        run: cd goo-gl-archives && go run cmd/main.go
 
       - name: Set current datetime as env variable
         env:
           TZ: "Asia/Tokyo"
         run: echo "CURRENT_DATETIME=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
 
-      - name: Commit and Push
+      - name: Check for changes
+        id: check_changes
         run: |
-          if (git diff --shortstat --ignore-submodules | grep '[0-9]'); then
-            git config --local user.email "GitHub Actions"
-            git config --local user.name "actions@github.com"
-            git add db
-            git commit -m "chore: Update database on ${{ env.CURRENT_DATETIME }}"
-            git push origin main
+          git config --local user.name "GitHub Actions"
+          git config --local user.email "actions@github.com"
+
+          git add db/archives.db goo-gl-archives/logs
+          if git diff --cached --quiet; then
+            echo "No changes detected in dump directory. Skipping commit and push."
+            echo "changes_detected=false" >> $GITHUB_OUTPUT
+            exit 0
+          else
+            echo "changes_detected=true" >> $GITHUB_OUTPUT
           fi
 
-      - name: Upload CSV to GIST
-        uses: exuanbo/actions-deploy-gist@v1
-        with:
-          token: ${{ secrets.GIST_TOKEN }}
-          gist_id: 928ec3b5bc795074e1f4ab4afc150ba3
-          file_path: .output/links.csv
-          file_type: text
+      - name: Commit and push changes
+        if: steps.check_changes.outputs.changes_detected == 'true'
+        run: |
+          git fetch
+          git pull
+          git commit -m "chore: Update database on ${{ env.CURRENT_DATETIME }}"
+          git push origin main

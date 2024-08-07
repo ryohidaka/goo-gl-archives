@@ -1,20 +1,9 @@
-# goo-gl-archives
+# Google URL Shortener Archives
 
-[![PyPI version](https://badge.fury.io/py/goo-gl-archives.svg)](https://badge.fury.io/py/goo-gl-archives)
-![build](https://github.com/ryohidaka/goo-gl-archives/workflows/Build/badge.svg)
+[![Run](https://github.com/ryohidaka/goo-gl-archives/actions/workflows/run.yml/badge.svg?branch=main)](https://github.com/ryohidaka/goo-gl-archives/actions/workflows/run.yml)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 Archives of links built with the Google URL Shortener.
-
-## Installation
-
-You can install this library using PyPI:
-
-```shell
-pip install goo-gl-archives
-```
-
-## Usage
 
 ## License
 
