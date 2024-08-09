@@ -1,10 +1,11 @@
 name: Dump Database
 
 on:
-  push:
-    paths:
-      - "db/**"
   workflow_dispatch:
+  workflow_run:
+    workflows: [Run]
+    types:
+      - completed
 
 jobs:
   dump-db:
@@ -31,7 +32,7 @@ jobs:
 
           git add db/dump.sql
           if git diff --cached --quiet; then
-            echo "No changes detected in dump directory. Skipping commit and push."
+            echo "No changes detected in dump file. Skipping commit and push."
             echo "changes_detected=false" >> $GITHUB_OUTPUT
             exit 0
           else
