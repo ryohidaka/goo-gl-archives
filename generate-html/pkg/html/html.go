@@ -69,7 +69,7 @@ func LoadTemplateFromFile(templatePath string) (*template.Template, error) {
 // - A string representing an HTML table with the link data or an error message if the template fails.
 func GenerateTable(links []database.Link) string {
 	// Path to the template file
-	templatePath := "templates/table_template.html"
+	templatePath := "templates/html_template.html"
 
 	// Load and parse the template
 	tmpl, err := LoadTemplateFromFile(templatePath)
