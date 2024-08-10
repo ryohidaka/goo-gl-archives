@@ -1,0 +1,48 @@
+name: Generate Markdown
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: [Run]
+    types:
+      - completed
+
+jobs:
+  generate-markdown:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "^1.21.3"
+          check-latest: true
+          cache-dependency-path: |
+            generate-markdown/go.sum
+
+      - name: Run generate-markdown
+        run: cd generate-markdown && go run cmd/main.go
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git config --local user.name "GitHub Actions"
+          git config --local user.email "actions@github.com"
+
+          git add docs/index.md
+          if git diff --cached --quiet; then
+            echo "No changes detected in markdown. Skipping commit and push."
+            echo "changes_detected=false" >> $GITHUB_OUTPUT
+            exit 0
+          else
+            echo "changes_detected=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push changes
+        if: steps.check_changes.outputs.changes_detected == 'true'
+        run: |
+          git fetch
+          git pull
+          git commit -m "chore: Update markdown file"
+          git push origin main
