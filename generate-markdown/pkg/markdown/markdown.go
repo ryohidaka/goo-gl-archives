@@ -8,10 +8,10 @@ import (
 )
 
 // sanitizeUTF8 ensures that a string is valid UTF-8.
-// If the string contains invalid UTF-8 sequences, it converts it to a valid UTF-8 string.
+// If the string contains invalid UTF-8 sequences, it replaces the string with an empty string.
 func sanitizeUTF8(str string) string {
 	if !utf8.ValidString(str) {
-		return string([]rune(str))
+		return ""
 	}
 	return str
 }
@@ -53,9 +53,9 @@ func GenerateTable(links []database.Link) string {
 		}
 
 		// Escape other special characters in the link data
-		uid := escapeMarkdownSpecialChars(link.UID)
-		redirectURL := escapeMarkdownSpecialChars(link.RedirectURL)
-		domainName := escapeMarkdownSpecialChars(link.DomainName)
+		uid := escapeMarkdownSpecialChars(sanitizeUTF8(link.UID))
+		redirectURL := escapeMarkdownSpecialChars(sanitizeUTF8(link.RedirectURL))
+		domainName := escapeMarkdownSpecialChars(sanitizeUTF8(link.DomainName))
 
 		// Write a formatted row with the link data
 		sb.WriteString(fmt.Sprintf("| %d | `%s` | https://goo.gl/%s | ![%s](%s) | `%s` | `%s` | `%d` |\n",
