@@ -31,8 +31,8 @@ func GenerateTable(links []database.Link) string {
 		}
 
 		// Write a formatted row with the link data
-		sb.WriteString(fmt.Sprintf("| %d | `%s` | https://goo.gl/%s | %s | %s | %s | %d |\n",
-			i+1, link.UID, link.UID, link.RedirectURL, link.DomainName, pageTitle, link.HTTPStatus))
+		sb.WriteString(fmt.Sprintf("| %d | `%s` | https://goo.gl/%s | ![%s](%s) | `%s` | `%s` | `%d` |\n",
+			i+1, link.UID, link.UID, link.RedirectURL, link.RedirectURL, link.DomainName, pageTitle, link.HTTPStatus))
 	}
 
 	// Return the generated markdown table as a string
