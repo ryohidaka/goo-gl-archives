@@ -31,7 +31,7 @@
       </thead>
       <tbody>
         {{- range $_, $link := .Links }}
-        <tr>
+        <tr id="{{ $link.UID | sanitize | escape }}">
           <td><code>{{ $link.UID | sanitize | escape }}</code></td>
           <td>
             <a
