@@ -35,7 +35,7 @@ jobs:
 
           git add db/archives.db goo-gl-archives/logs
           if git diff --cached --quiet; then
-            echo "No changes detected in dump directory. Skipping commit and push."
+            echo "No changes detected in db. Skipping commit and push."
             echo "changes_detected=false" >> $GITHUB_OUTPUT
             exit 0
           else
