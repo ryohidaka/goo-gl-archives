@@ -24,7 +24,7 @@ type Link struct {
 
 // TableName overrides the default table name used by GORM.
 func (Link) TableName() string {
-	return "links2"
+	return "links"
 }
 
 // ProcessRequest generates a random string, constructs the URL, and retrieves final URL information.
