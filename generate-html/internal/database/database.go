@@ -37,19 +37,21 @@ func Connect() (*gorm.DB, error) {
 	return db, nil
 }
 
-// GetLinks retrieves all records from the 'links' table in the SQLite database.
+// GetLinks retrieves all records from the 'links' table in the SQLite database,
+// ordered by UID in ascending order.
 //
 // Parameters:
 // - db: A pointer to the gorm.DB instance representing the database connection.
 //
 // Returns:
-// - A slice of Link structs containing all records from the 'links' table.
-// - An error if there is an issue retrieving the records.
+//   - A slice of Link structs containing all records from the 'links' table,
+//     ordered by UID in ascending order.
+//   - An error if there is an issue retrieving the records.
 func GetLinks(db *gorm.DB) ([]Link, error) {
 	var links []Link
 
-	// Execute the query to find all records in the 'links' table
-	if err := db.Find(&links).Error; err != nil {
+	// Execute the query to find all records in the 'links' table, ordered by UID in ascending order
+	if err := db.Order("uid asc").Find(&links).Error; err != nil {
 		return nil, err
 	}
 
