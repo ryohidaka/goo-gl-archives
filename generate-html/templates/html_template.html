@@ -21,7 +21,6 @@
     <table>
       <thead>
         <tr>
-          <th>Index</th>
           <th>UID</th>
           <th>Original URL</th>
           <th>Redirect URL</th>
@@ -31,9 +30,8 @@
         </tr>
       </thead>
       <tbody>
-        {{- range $i, $link := .Links }}
+        {{- range $_, $link := .Links }}
         <tr>
-          <td>{{ $i | addOne }}</td>
           <td><code>{{ $link.UID | sanitize | escape }}</code></td>
           <td>
             <a
