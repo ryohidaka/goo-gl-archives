@@ -4,9 +4,18 @@ import (
 	"fmt"
 	"generate-html/internal/database"
 	"html/template"
+	"io/ioutil"
+	"path/filepath"
 	"strings"
 	"unicode/utf8"
 )
+
+// TemplateFuncs defines custom template functions for use in HTML templates.
+var TemplateFuncs = template.FuncMap{
+	"sanitize": sanitizeUTF8,
+	"escape":   escapeHTMLSpecialChars,
+	"addOne":   func(i int) int { return i + 1 },
+}
 
 // sanitizeUTF8 ensures that a string is valid UTF-8.
 // If the string contains invalid UTF-8 sequences, it replaces the string with an empty string.
@@ -26,6 +35,30 @@ func escapeHTMLSpecialChars(str string) string {
 	return str
 }
 
+// LoadTemplateFromFile loads an HTML template from the specified file path.
+// It parses the template and returns it along with any error encountered.
+//
+// Parameters:
+// - templatePath: The path to the HTML template file.
+//
+// Returns:
+// - A parsed template and any error encountered during the process.
+func LoadTemplateFromFile(templatePath string) (*template.Template, error) {
+	// Read the content of the template file
+	content, err := ioutil.ReadFile(filepath.Clean(templatePath))
+	if err != nil {
+		return nil, err
+	}
+
+	// Parse the template with custom functions
+	tmpl, err := template.New("table").Funcs(TemplateFuncs).Parse(string(content))
+	if err != nil {
+		return nil, err
+	}
+
+	return tmpl, nil
+}
+
 // GenerateTable generates an HTML table from a slice of database.Link structs using a template.
 // Each row in the table corresponds to a link's data, formatted with specific columns.
 //
@@ -33,48 +66,15 @@ func escapeHTMLSpecialChars(str string) string {
 // - links: A slice of database.Link structs containing link data.
 //
 // Returns:
-// - A string representing an HTML table with the link data.
+// - A string representing an HTML table with the link data or an error message if the template fails.
 func GenerateTable(links []database.Link) string {
-	const tableTemplate = `
-<table>
-	<thead>
-		<tr>
-			<th>Index</th>
-			<th>UID</th>
-			<th>Original URL</th>
-			<th>Redirect URL</th>
-			<th>Domain Name</th>
-			<th>Page Title</th>
-			<th>HTTP Status</th>
-		</tr>
-	</thead>
-	<tbody>
-		{{- range $i, $link := .Links }}
-		<tr>
-			<td>{{ $i | addOne }}</td>
-			<td><code>{{ $link.UID | sanitize | escape }}</code></td>
-			<td><a href="https://goo.gl/{{ $link.UID | sanitize | escape }}" target="_blank" rel="noopener noreferrer">https://goo.gl/{{ $link.UID | sanitize | escape }}</a></td>
-			<td><a href="{{ $link.RedirectURL | sanitize | escape }}" target="_blank" rel="noopener noreferrer">{{ $link.RedirectURL | sanitize | escape }}</a></td>
-			<td><code>{{ $link.DomainName | sanitize | escape }}</code></td>
-			<td><code>{{ if $link.PageTitle }}{{ $link.PageTitle | sanitize | escape }}{{ end }}</code></td>
-			<td><code>{{ $link.HTTPStatus }}</code></td>
-		</tr>
-		{{- end }}
-	</tbody>
-</table>
-`
+	// Path to the template file
+	templatePath := "templates/table_template.html"
 
-	// Define custom template functions
-	funcMap := template.FuncMap{
-		"sanitize": sanitizeUTF8,
-		"escape":   escapeHTMLSpecialChars,
-		"addOne":   func(i int) int { return i + 1 },
-	}
-
-	// Parse and execute the template
-	tmpl, err := template.New("table").Funcs(funcMap).Parse(tableTemplate)
+	// Load and parse the template
+	tmpl, err := LoadTemplateFromFile(templatePath)
 	if err != nil {
-		return fmt.Sprintf("Error parsing template: %s", err)
+		return fmt.Sprintf("Error loading template: %s", err)
 	}
 
 	var sb strings.Builder
