@@ -3,4 +3,4 @@ version: 2
 secret:
   ignored_paths:
     - db/dump.sql
-    - docs/index.md
+    - docs/index.html
