@@ -10,6 +10,9 @@ on:
     paths:
       - "generate-html/**"
 
+permissions:
+  contents: write
+
 jobs:
   generate-html:
     runs-on: ubuntu-latest
@@ -27,25 +30,9 @@ jobs:
       - name: Run generate-html
         run: cd generate-html && go run cmd/main.go
 
-      - name: Check for changes
-        id: check_changes
-        run: |
-          git config --local user.name "GitHub Actions"
-          git config --local user.email "actions@github.com"
-
-          git add docs/index.html
-          if git diff --cached --quiet; then
-            echo "No changes detected in html. Skipping commit and push."
-            echo "changes_detected=false" >> $GITHUB_OUTPUT
-            exit 0
-          else
-            echo "changes_detected=true" >> $GITHUB_OUTPUT
-          fi
-
       - name: Commit and push changes
-        if: steps.check_changes.outputs.changes_detected == 'true'
-        run: |
-          git fetch
-          git pull
-          git commit -m "chore: Update html file"
-          git push origin main
+        uses: ryohidaka/action-commit-push@v0.3.0
+        with:
+          files: "docs/index.html"
+          commit-message: "chore: Update html file"
+          rebase: true
