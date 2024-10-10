@@ -15,14 +15,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup SQLite environment
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y sqlite3 libsqlite3-dev
-
       - name: Dump tables to SQL
-        run: |
-          sqlite3 db/archives.db ".output ./db/dump.sql" ".dump"
+        uses: ryohidaka/action-dump-sqlite@v0.1.0
+        with:
+          db: "db/archives.db"
+          output: "./db/dump.sql"
 
       - name: Check for changes
         id: check_changes
