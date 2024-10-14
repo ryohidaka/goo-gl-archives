@@ -33,6 +33,6 @@ jobs:
       - name: Commit and push changes
         uses: ryohidaka/action-commit-push@v0.3.0
         with:
-          files: "db/archives.db goo-gl-archives/logs"
+          files: "db/archives.db"
           commit-message: "chore: Update database on ${{ env.CURRENT_DATETIME }}"
           rebase: true
