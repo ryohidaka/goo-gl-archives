@@ -15,6 +15,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Generate Dumpfile
+        run: cat db/x* > db/dump.sql
+
       - name: Restore DB
         uses: ryohidaka/action-restore-sqlite@v0.1.0
         with:
@@ -37,6 +40,9 @@ jobs:
           db: "db/archives.db"
           output: "./db/dump.sql"
 
+      - name: Split Dumpfile
+        run: cat db/dump.sql | split -b 100000000
+
       - name: Set current datetime as env variable
         env:
           TZ: "Asia/Tokyo"
@@ -45,6 +51,6 @@ jobs:
       - name: Commit and push changes
         uses: ryohidaka/action-commit-push@v0.3.0
         with:
-          files: "db/dump.sql"
+          files: "db"
           commit-message: "chore: Update database on ${{ env.CURRENT_DATETIME }}"
           rebase: true
