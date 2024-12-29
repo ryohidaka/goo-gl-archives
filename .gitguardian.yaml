@@ -2,5 +2,5 @@ version: 2
 
 secret:
   ignored_paths:
-    - db/dump.sql
+    - db
     - docs/index.html
