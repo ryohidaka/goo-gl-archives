@@ -41,7 +41,7 @@ jobs:
           output: "./db/dump.sql"
 
       - name: Split Dumpfile
-        run: split -b 100000000 db/dump.sql db/x
+        run: split -b 50000000 db/dump.sql db/x
 
       - name: Set current datetime as env variable
         env:
