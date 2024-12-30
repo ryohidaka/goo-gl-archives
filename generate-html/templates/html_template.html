@@ -16,6 +16,17 @@
 
       gtag("config", "G-BLFMXLRLCL");
     </script>
+    <script>
+      src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+      $(document).ready(function(){
+        $("#searchbar").on("keyup", function() {
+          var value = $(this).val().toLowerCase();
+          $("#table tr").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+          });
+        });
+      });
+      </script>
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -84,6 +95,11 @@
   </head>
   <body>
     <h1>Archives of the Google URL Shortener</h1>
+    <div class="container">
+      <input id="searchbar" 
+             type="text" name="search" 
+             placeholder="search...">
+    </div>
     <table border="1">
       <thead>
         <tr>
@@ -95,7 +111,7 @@
           <th>HTTP Status</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody id="table">
         {{- range $_, $link := .Links }}
         <tr id="{{ $link.UID | sanitize | escape }}">
           <td title="{{ $link.UID | sanitize | escape }}">
