@@ -28,7 +28,7 @@ func (Link) TableName() string {
 
 // ProcessRequest generates a random string, constructs the URL, and retrieves final URL information.
 func ProcessRequest() (Link, error) {
-	randomStr, err := utils.GenerateRandomString(5, 10)
+	randomStr, err := utils.GenerateRandomString(4, 6)
 	if err != nil {
 		return Link{}, fmt.Errorf("failed to generate random string: %w", err)
 	}
