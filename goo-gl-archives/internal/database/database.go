@@ -28,19 +28,15 @@ func InitializeDatabase(dbName string) (*gorm.DB, error) {
 // It logs valid links and ignores those with empty UID or RedirectURL.
 func StoreLinks(db *gorm.DB, links []url_processor.Link, logger *log.Logger) error {
 	for _, link := range links {
-		// Skip links with empty UID or RedirectURL
-		if link.UID == "" || link.RedirectURL == "" {
-			continue
-		}
 
 		// Ensure PageTitle is not nil
 		if link.PageTitle == nil {
 			link.PageTitle = new(string) // or set a default value
 		}
 
-		// Log details of valid links
+		// Log details of valid links, using safeString to handle nil pointers
 		logger.Printf("UID: %s | Redirect URL: %s | Domain: %s | Page Title: %s | HTTP Status Code: %d",
-			link.UID, link.RedirectURL, link.DomainName, *link.PageTitle, link.HTTPStatus)
+			link.UID, safeString(link.RedirectURL), safeString(link.DomainName), safeString(link.PageTitle), link.HTTPStatus)
 
 		// Insert or update link in the database
 		if err := db.Clauses(clause.OnConflict{
@@ -52,4 +48,11 @@ func StoreLinks(db *gorm.DB, links []url_processor.Link, logger *log.Logger) err
 	}
 
 	return nil
+}
+
+func safeString(s *string) string {
+	if s == nil {
+		return ""
+	}
+	return *s
 }
