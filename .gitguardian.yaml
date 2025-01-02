@@ -3,3 +3,10 @@ version: 2
 secret:
   ignored_paths:
     - db
+
+iac:
+  ignored_paths:
+    - db
+sca:
+  ignored_paths:
+    - db
