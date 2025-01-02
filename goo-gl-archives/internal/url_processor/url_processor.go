@@ -20,6 +20,7 @@ type Link struct {
 	HTTPStatus  int
 	CreatedAt   time.Time `gorm:"autoCreateTime"` // Automatically set to current time on insert
 	UpdatedAt   time.Time `gorm:"autoUpdateTime"` // Automatically set to current time on update
+	IsActive    bool
 }
 
 // TableName overrides the default table name used by GORM.
@@ -51,6 +52,7 @@ func ProcessRequest() (Link, error) {
 		DomainName:  domain,
 		PageTitle:   title,
 		HTTPStatus:  statusCode,
+		IsActive: true,
 	}, nil
 }
 
