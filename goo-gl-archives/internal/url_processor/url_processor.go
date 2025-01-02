@@ -14,10 +14,10 @@ import (
 // Link represents the structure to hold the final URL information.
 type Link struct {
 	UID         string `gorm:"primaryKey;unique"`
-	RedirectURL string
-	DomainName  string
+	RedirectURL *string
+	DomainName  *string
 	PageTitle   *string
-	HTTPStatus  int
+	HTTPStatus  *int
 	CreatedAt   time.Time `gorm:"autoCreateTime"` // Automatically set to current time on insert
 	UpdatedAt   time.Time `gorm:"autoUpdateTime"` // Automatically set to current time on update
 	IsActive    bool
@@ -43,16 +43,23 @@ func ProcessRequest() (Link, error) {
 
 	// Check if domain is "goo.gl"
 	if domain == "goo.gl" {
-		return Link{}, nil
+		return Link{
+			UID:         randomStr,
+			RedirectURL: nil,
+			DomainName:  nil,
+			PageTitle:   nil,
+			HTTPStatus:  nil,
+			IsActive:    false,
+		}, nil
 	}
 
 	return Link{
 		UID:         randomStr,
-		RedirectURL: redirectURL,
-		DomainName:  domain,
+		RedirectURL: &redirectURL,
+		DomainName:  &domain,
 		PageTitle:   title,
-		HTTPStatus:  statusCode,
-		IsActive: true,
+		HTTPStatus:  &statusCode,
+		IsActive:    true,
 	}, nil
 }
 
