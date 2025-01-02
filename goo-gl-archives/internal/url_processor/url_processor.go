@@ -18,8 +18,6 @@ type Link struct {
 	DomainName  *string
 	PageTitle   *string
 	HTTPStatus  int
-	CreatedAt   time.Time `gorm:"autoCreateTime"` // Automatically set to current time on insert
-	UpdatedAt   time.Time `gorm:"autoUpdateTime"` // Automatically set to current time on update
 	IsActive    bool
 }
 
