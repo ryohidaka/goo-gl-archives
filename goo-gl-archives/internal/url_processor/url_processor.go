@@ -41,8 +41,8 @@ func ProcessRequest() (Link, error) {
 		return Link{}, fmt.Errorf("failed to get URL info: %w", err)
 	}
 
-	// Check if domain is "goo.gl" and title is "Dynamic Link Not Found"
-	if domain == "goo.gl" && title != nil && *title == "Dynamic Link Not Found" {
+	// Check if domain is "goo.gl"
+	if domain == "goo.gl" {
 		return Link{}, nil
 	}
 
