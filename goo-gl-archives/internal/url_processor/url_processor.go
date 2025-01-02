@@ -17,7 +17,7 @@ type Link struct {
 	RedirectURL *string
 	DomainName  *string
 	PageTitle   *string
-	HTTPStatus  *int
+	HTTPStatus  int
 	CreatedAt   time.Time `gorm:"autoCreateTime"` // Automatically set to current time on insert
 	UpdatedAt   time.Time `gorm:"autoUpdateTime"` // Automatically set to current time on update
 	IsActive    bool
@@ -48,7 +48,7 @@ func ProcessRequest() (Link, error) {
 			RedirectURL: nil,
 			DomainName:  nil,
 			PageTitle:   nil,
-			HTTPStatus:  nil,
+			HTTPStatus:  statusCode,
 			IsActive:    false,
 		}, nil
 	}
@@ -58,7 +58,7 @@ func ProcessRequest() (Link, error) {
 		RedirectURL: &redirectURL,
 		DomainName:  &domain,
 		PageTitle:   title,
-		HTTPStatus:  &statusCode,
+		HTTPStatus:  statusCode,
 		IsActive:    true,
 	}, nil
 }
