@@ -59,3 +59,4 @@ jobs:
           files: "db"
           branch: "batch/${{ env.CURRENT_DATETIME }}"
           commit-message: "chore: Update database on ${{ env.CURRENT_DATETIME }}"
+          rebase: true
