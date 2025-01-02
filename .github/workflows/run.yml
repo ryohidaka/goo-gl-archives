@@ -54,9 +54,10 @@ jobs:
         run: split -b 50000000 db/dump.sql db/x
 
       - name: Commit and push changes
-        uses: ryohidaka/action-commit-push@v0.4.0
+        uses: ryohidaka/action-commit-push@v0.5.0
         with:
           files: "db"
           branch: "batch/${{ env.CURRENT_DATETIME }}"
           commit-message: "chore: Update database on ${{ env.CURRENT_DATETIME }}"
           rebase: true
+          force-push: true
