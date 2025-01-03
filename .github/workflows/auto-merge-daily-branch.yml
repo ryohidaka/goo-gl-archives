@@ -2,7 +2,7 @@ name: Auto Merge Daily Branch
 
 on:
   schedule:
-    - cron: "30 23 * * *"
+    - cron: "50 23 * * *"
   workflow_dispatch:
 
 jobs:
@@ -16,33 +16,14 @@ jobs:
       - name: Set current datetime as env variable
         run: echo "CURRENT_DATETIME=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
 
-      - name: Create a new branch and commit changes
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git checkout -b batch/${{ env.CURRENT_DATETIME }}
-          # Add your commands to update the repository content here
-          git commit --allow-empty -m "chore: Update database on ${{ env.CURRENT_DATETIME }}"
-          git push origin batch/${{ env.CURRENT_DATETIME }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Create pull request
-        id: create_pr
-        run: |
-          PR_URL=$(gh pr create \
-            --base main \
-            --head batch/${{ env.CURRENT_DATETIME }} \
-            --title "chore: Update database on ${{ env.CURRENT_DATETIME }}" \
-            --body "This pull request merges the branch batch/${{ env.CURRENT_DATETIME }} into main." \
-            --assignee ryohidaka \
-            --reviewer ryohidaka)
-          echo "PR_URL=${PR_URL}" >> $GITHUB_ENV
-
       - name: Merge pull request
-        if: env.PR_URL != ''
         run: |
-          PR_NUMBER=$(echo "${{ env.PR_URL }}" | grep -oE '[0-9]+$')
-          gh pr merge $PR_NUMBER --squash --admin --delete-branch
+          PR_NUMBER=$(gh pr list --base main --head batch/${{ env.CURRENT_DATETIME }} --json number -q '.[0].number')
+          if [ -n "$PR_NUMBER" ]; then
+            gh pr merge $PR_NUMBER --squash --admin --delete-branch
+          else
+            echo "No PR found from test to main."
+            exit 1
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
