@@ -3,27 +3,19 @@ name: Run
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 * * * *"
+    - cron: "30 * * * *"
 
 jobs:
   run:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
       - name: Set current datetime as env variable
         run: echo "CURRENT_DATETIME=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
 
-      - name: Create and checkout batch branch
-        run: |
-          git fetch origin batch/${{ env.CURRENT_DATETIME }} || true
-          if git show-ref --verify --quiet refs/remotes/origin/batch/${{ env.CURRENT_DATETIME }}; then
-            git checkout batch/${{ env.CURRENT_DATETIME }}
-            git rebase origin/batch/${{ env.CURRENT_DATETIME }} || git rebase --abort
-          else
-            git checkout -b batch/${{ env.CURRENT_DATETIME }}
-          fi
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: "batch/${{ env.CURRENT_DATETIME }}"
 
       - name: Generate Dumpfile
         run: cat db/x* > db/dump.sql
@@ -59,5 +51,3 @@ jobs:
           files: "db"
           branch: "batch/${{ env.CURRENT_DATETIME }}"
           commit-message: "chore: Update database on ${{ env.CURRENT_DATETIME }}"
-          rebase: true
-          force-push: true
