@@ -22,7 +22,13 @@ jobs:
 
       - name: Create and checkout batch branch
         run: |
-          git checkout -b batch/${{ env.CURRENT_DATETIME }} || git checkout batch/${{ env.CURRENT_DATETIME }}
+          git fetch origin batch/${{ env.CURRENT_DATETIME }} || true
+          if git show-ref --verify --quiet refs/remotes/origin/batch/${{ env.CURRENT_DATETIME }}; then
+            git checkout batch/${{ env.CURRENT_DATETIME }}
+            git rebase origin/batch/${{ env.CURRENT_DATETIME }} || git rebase --abort
+          else
+            git checkout -b batch/${{ env.CURRENT_DATETIME }}
+          fi
 
       - name: Generate Dumpfile
         run: cat db/x* > db/dump.sql
