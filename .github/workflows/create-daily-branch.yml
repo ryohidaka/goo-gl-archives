@@ -5,6 +5,10 @@ on:
     - cron: "0 0 * * *"
   workflow_dispatch:
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   create-daily-branch:
     runs-on: ubuntu-latest
@@ -18,5 +22,22 @@ jobs:
 
       - name: Create and checkout batch branch
         run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
           git switch -c batch/${{ env.CURRENT_DATETIME }}
+          
+          git commit --allow-empty -m "chore: Update database on ${{ env.CURRENT_DATETIME }}"
           git push origin HEAD
+
+      - name: Create pull request
+        run: |
+          gh pr create \
+            --base main \
+            --head batch/${{ env.CURRENT_DATETIME }} \
+            --title "chore: Update database on ${{ env.CURRENT_DATETIME }}" \
+            --body "This pull request merges the branch batch/${{ env.CURRENT_DATETIME }} into main." \
+            --assignee ryohidaka \
+            --reviewer ryohidaka
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
