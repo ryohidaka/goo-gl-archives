@@ -22,7 +22,6 @@ jobs:
 
       - name: Create and checkout batch branch
         run: |
-          git fetch origin
           git checkout -b batch/${{ env.CURRENT_DATETIME }} || git checkout batch/${{ env.CURRENT_DATETIME }}
 
       - name: Generate Dumpfile
