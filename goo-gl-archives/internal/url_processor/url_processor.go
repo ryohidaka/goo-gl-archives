@@ -6,7 +6,9 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strings"
 	"time"
+	"unicode"
 
 	"golang.org/x/net/html"
 )
@@ -114,7 +116,14 @@ func extractTitle(body io.Reader) (*string, error) {
 	if err != nil {
 		return nil, err
 	}
-	return extractTitleFromNode(doc), nil
+	title := extractTitleFromNode(doc)
+	if title != nil {
+		// Clean the title to remove unnecessary data
+		cleanedTitle := cleanTitle(*title)
+		println(cleanedTitle)
+		return &cleanedTitle, nil
+	}
+	return nil, nil
 }
 
 // extractTitleFromNode recursively searches for the <title> element in the HTML node tree.
@@ -129,4 +138,27 @@ func extractTitleFromNode(n *html.Node) *string {
 		}
 	}
 	return nil
+}
+
+// cleanTitle trims whitespace, removes newline characters, and filters invalid characters.
+func cleanTitle(title string) string {
+	// Trim surrounding whitespace
+	title = strings.TrimSpace(title)
+
+	// Replace newlines and tabs with a single space
+	title = strings.ReplaceAll(title, "\n", " ")
+	title = strings.ReplaceAll(title, "\t", " ")
+
+	// Normalize spaces
+	title = strings.Join(strings.Fields(title), " ")
+
+	// Remove non-printable or invalid Unicode characters
+	title = strings.Map(func(r rune) rune {
+		if unicode.IsPrint(r) && !unicode.IsControl(r) {
+			return r
+		}
+		return -1
+	}, title)
+
+	return title
 }
