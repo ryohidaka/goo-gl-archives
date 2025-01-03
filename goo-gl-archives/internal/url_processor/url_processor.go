@@ -120,7 +120,6 @@ func extractTitle(body io.Reader) (*string, error) {
 	if title != nil {
 		// Clean the title to remove unnecessary data
 		cleanedTitle := cleanTitle(*title)
-		println(cleanedTitle)
 		return &cleanedTitle, nil
 	}
 	return nil, nil
