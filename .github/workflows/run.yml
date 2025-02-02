@@ -31,10 +31,10 @@ jobs:
           go-version: "^1.21.3"
           check-latest: true
           cache-dependency-path: |
-            goo-gl-archives/go.sum
+            src/goo-gl-archives/go.sum
 
       - name: Run backup
-        run: cd goo-gl-archives && go run cmd/main.go
+        run: cd src/goo-gl-archives && go run cmd/main.go
 
       - name: Dump tables to SQL
         uses: ryohidaka/action-dump-sqlite@v0.1.0

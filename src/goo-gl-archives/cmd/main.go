@@ -19,7 +19,7 @@ func main() {
 	logger := utils.SetupLogger("logfile.log")
 
 	// Initialize the database
-	db, err := database.InitializeDatabase("../db/archives.db")
+	db, err := database.InitializeDatabase("../../db/archives.db")
 	if err != nil {
 		logger.Fatal(err)
 	}
